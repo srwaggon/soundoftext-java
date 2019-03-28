@@ -1,3 +1,5 @@
+package com.soundoftext;
+
 public class SoundOfTextFailureResponse implements SoundOfTextResponse {
 
   private boolean success;
@@ -29,7 +31,7 @@ public class SoundOfTextFailureResponse implements SoundOfTextResponse {
 
   @Override
   public String toString() {
-    return "SoundOfTextFailureResponse{" +
+    return "com.soundoftext.SoundOfTextFailureResponse{" +
         "success=" + success +
         ", message='" + message + '\'' +
         '}';

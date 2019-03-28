@@ -1,3 +1,5 @@
+package com.soundoftext;
+
 public class TextDataRequest {
 
   private String text;
@@ -29,7 +31,7 @@ public class TextDataRequest {
 
   @Override
   public String toString() {
-    return "TextDataRequest{" +
+    return "com.soundoftext.TextDataRequest{" +
         "text='" + text + '\'' +
         ", voice='" + voice + '\'' +
         '}';
