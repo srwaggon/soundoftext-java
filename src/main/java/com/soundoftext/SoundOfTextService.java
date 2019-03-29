@@ -33,7 +33,7 @@ public class SoundOfTextService {
     String id = success.getId();
 
     try {
-      return location(id);
+      return Optional.of(location(id));
     } catch (TimeoutException | SoundOfTextException e) {
       e.printStackTrace();
     }
@@ -88,36 +88,37 @@ public class SoundOfTextService {
   // endregion request
 
   // region location
-  public Optional<String> location(
+  public String location(
       String id
   ) throws TimeoutException, SoundOfTextException {
     return location(id, 1000);
   }
 
-  public Optional<String> location(
+  public String location(
       String id,
       int timeout
   ) throws TimeoutException, SoundOfTextException {
     while (true) {
       Optional<SoundOfTextRequestStatusResponse> statusRequest = status(id);
-      if (statusRequest.isPresent()) {
-        SoundOfTextRequestStatusResponse response = statusRequest.get();
-        SoundOfTextStatus status = response.getStatus();
-
-        if (SoundOfTextStatus.Done.equals(status)) {
-          return Optional.of(response.getLocation());
-        }
-
-        if (SoundOfTextStatus.Error.equals(status)) {
-          throw new SoundOfTextException(response.getMessage());
-        }
-
-        if (timeout > 30 * 1000) {
-          throw new TimeoutException();
-        }
-
-        timeout *= 2;
+      if (!statusRequest.isPresent()) {
+        throw new SoundOfTextException("Failed while checking status of sound with id " + id);
       }
+      SoundOfTextRequestStatusResponse response = statusRequest.get();
+      SoundOfTextStatus status = response.getStatus();
+
+      if (SoundOfTextStatus.Done.equals(status)) {
+        return response.getLocation();
+      }
+
+      if (SoundOfTextStatus.Error.equals(status)) {
+        throw new SoundOfTextException(response.getMessage());
+      }
+
+      if (timeout > 30 * 1000) {
+        throw new TimeoutException();
+      }
+
+      timeout *= 2;
     }
   }
   // endregion location
